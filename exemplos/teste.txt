@@ -1,0 +1,26 @@
+int x;
+float preco;
+double media;
+bool ativo;
+x = 10;
+preco = 15.75;
+media = x + preco * 2.5;
+ativo = true;
+
+if (x > 5) {
+  preco = 20.5;
+} else {
+  preco = 10.5;
+}
+
+while (x < 20) {
+  x = x + 1;
+}
+
+do {
+  x = x - 1;
+} while (x > 10);
+
+for (int i = 0; i < 10; i = i + 1) {
+  media = media + 1.5;
+}

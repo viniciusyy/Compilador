@@ -1,12 +1,27 @@
-<programa> ::= <opt_espacos> <lista_declaracoes> <opt_espacos>
+<programa> ::= <opt_espacos> <lista_comandos> <opt_espacos>
 
-<lista_declaracoes> ::= <declaracao>
-                       | <declaracao> <opt_espacos> <lista_declaracoes>
+<lista_comandos> ::= <comando>
+                   | <comando> <opt_espacos> <lista_comandos>
 
-<declaracao> ::= <declaracao_variavel>
-               | <atribuicao>
+<comando> ::= <declaracao_variavel>
+            | <atribuicao>
+            | <comando_if>
+            | <comando_while>
+            | <comando_do_while>
+            | <comando_for>
+            | <bloco>
 
-<declaracao_variavel> ::= <tipo> <espacos> <identificador> <opt_espacos> ";"
+<bloco> ::= "{" <opt_espacos> <lista_comandos_opcional> <opt_espacos> "}"
+
+<lista_comandos_opcional> ::= <lista_comandos>
+                            | E
+
+<declaracao_variavel> ::= <tipo> <espacos> <identificador> <opt_espacos> <inicializador> <opt_espacos> ";"
+
+<declaracao_variavel_sem_ponto_virgula> ::= <tipo> <espacos> <identificador> <opt_espacos> <inicializador>
+
+<inicializador> ::= "=" <opt_espacos> <expressao>
+                  | E
 
 <tipo> ::= "int"
          | "float"
@@ -16,27 +31,95 @@
 
 <atribuicao> ::= <identificador> <opt_espacos> "=" <opt_espacos> <expressao> <opt_espacos> ";"
 
-<expressao> ::= <termo> <expressao_linha>
+<atribuicao_sem_ponto_virgula> ::= <identificador> <opt_espacos> "=" <opt_espacos> <expressao>
 
-<expressao_linha> ::= <opt_espacos> "+" <opt_espacos> <termo> <expressao_linha>
-                    | <opt_espacos> "-" <opt_espacos> <termo> <expressao_linha>
+<comando_if> ::= "if" <opt_espacos> "(" <opt_espacos> <expressao> <opt_espacos> ")" <opt_espacos> <comando> <comando_else>
+
+<comando_else> ::= <opt_espacos> "else" <opt_espacos> <comando>
+                 | E
+
+<comando_while> ::= "while" <opt_espacos> "(" <opt_espacos> <expressao> <opt_espacos> ")" <opt_espacos> <comando>
+
+<comando_do_while> ::= "do" <opt_espacos> <comando> <opt_espacos> "while" <opt_espacos> "(" <opt_espacos> <expressao> <opt_espacos> ")" <opt_espacos> ";"
+
+<comando_for> ::= "for" <opt_espacos> "(" <opt_espacos> <for_inicio> <opt_espacos> ";" <opt_espacos> <expressao_opcional> <opt_espacos> ";" <opt_espacos> <for_atualizacao> <opt_espacos> ")" <opt_espacos> <comando>
+
+<for_inicio> ::= <declaracao_variavel_sem_ponto_virgula>
+               | <atribuicao_sem_ponto_virgula>
+               | E
+
+<for_atualizacao> ::= <atribuicao_sem_ponto_virgula>
                     | E
 
-<termo> ::= <fator> <termo_linha>
+<expressao_opcional> ::= <expressao>
+                        | E
 
-<termo_linha> ::= <opt_espacos> "*" <opt_espacos> <fator> <termo_linha>
-                | <opt_espacos> "/" <opt_espacos> <fator> <termo_linha>
+<expressao> ::= <expressao_ou>
+
+<expressao_ou> ::= <expressao_e> <expressao_ou_linha>
+
+<expressao_ou_linha> ::= <opt_espacos> "||" <opt_espacos> <expressao_e> <expressao_ou_linha>
+                        | E
+
+<expressao_e> ::= <expressao_igualdade> <expressao_e_linha>
+
+<expressao_e_linha> ::= <opt_espacos> "&&" <opt_espacos> <expressao_igualdade> <expressao_e_linha>
+                       | E
+
+<expressao_igualdade> ::= <expressao_relacional> <expressao_igualdade_linha>
+
+<expressao_igualdade_linha> ::= <opt_espacos> "==" <opt_espacos> <expressao_relacional> <expressao_igualdade_linha>
+                               | <opt_espacos> "!=" <opt_espacos> <expressao_relacional> <expressao_igualdade_linha>
+                               | E
+
+<expressao_relacional> ::= <expressao_aditiva> <expressao_relacional_linha>
+
+<expressao_relacional_linha> ::= <opt_espacos> ">" <opt_espacos> <expressao_aditiva> <expressao_relacional_linha>
+                                | <opt_espacos> "<" <opt_espacos> <expressao_aditiva> <expressao_relacional_linha>
+                                | <opt_espacos> ">=" <opt_espacos> <expressao_aditiva> <expressao_relacional_linha>
+                                | <opt_espacos> "<=" <opt_espacos> <expressao_aditiva> <expressao_relacional_linha>
+                                | E
+
+<expressao_aditiva> ::= <termo> <expressao_aditiva_linha>
+
+<expressao_aditiva_linha> ::= <opt_espacos> "+" <opt_espacos> <termo> <expressao_aditiva_linha>
+                             | <opt_espacos> "-" <opt_espacos> <termo> <expressao_aditiva_linha>
+                             | E
+
+<termo> ::= <unario> <termo_linha>
+
+<termo_linha> ::= <opt_espacos> "*" <opt_espacos> <unario> <termo_linha>
+                | <opt_espacos> "/" <opt_espacos> <unario> <termo_linha>
+                | <opt_espacos> "%" <opt_espacos> <unario> <termo_linha>
                 | E
 
+<unario> ::= "!" <opt_espacos> <unario>
+           | "-" <opt_espacos> <unario>
+           | <fator>
+
 <fator> ::= <numero>
+          | <booleano>
+          | <char_literal>
           | <identificador>
           | "(" <opt_espacos> <expressao> <opt_espacos> ")"
+
+<booleano> ::= "true"
+             | "false"
+
+<char_literal> ::= "'" <caractere_char> "'"
+
+<caractere_char> ::= <letra>
+                   | <digito>
+                   | "_"
+                   | " "
 
 <numero> ::= <flutuante>
            | <inteiro>
 
-<inteiro> ::= <digito>
-            | <digito> <inteiro>
+<inteiro> ::= <digito> <inteiro_linha>
+
+<inteiro_linha> ::= <digito> <inteiro_linha>
+                  | E
 
 <flutuante> ::= <inteiro> "." <inteiro>
 
