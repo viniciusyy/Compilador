@@ -1,0 +1,64 @@
+<programa> ::= <opt_espacos> <lista_declaracoes> <opt_espacos>
+
+<lista_declaracoes> ::= <declaracao>
+                       | <declaracao> <opt_espacos> <lista_declaracoes>
+
+<declaracao> ::= <declaracao_variavel>
+               | <atribuicao>
+
+<declaracao_variavel> ::= <tipo> <espacos> <identificador> <opt_espacos> ";"
+
+<tipo> ::= "int"
+         | "float"
+         | "double"
+         | "char"
+         | "bool"
+
+<atribuicao> ::= <identificador> <opt_espacos> "=" <opt_espacos> <expressao> <opt_espacos> ";"
+
+<expressao> ::= <termo> <expressao_linha>
+
+<expressao_linha> ::= <opt_espacos> "+" <opt_espacos> <termo> <expressao_linha>
+                    | <opt_espacos> "-" <opt_espacos> <termo> <expressao_linha>
+                    | E
+
+<termo> ::= <fator> <termo_linha>
+
+<termo_linha> ::= <opt_espacos> "*" <opt_espacos> <fator> <termo_linha>
+                | <opt_espacos> "/" <opt_espacos> <fator> <termo_linha>
+                | E
+
+<fator> ::= <numero>
+          | <identificador>
+          | "(" <opt_espacos> <expressao> <opt_espacos> ")"
+
+<numero> ::= <flutuante>
+           | <inteiro>
+
+<inteiro> ::= <digito>
+            | <digito> <inteiro>
+
+<flutuante> ::= <inteiro> "." <inteiro>
+
+<identificador> ::= <letra> <identificador_linha>
+
+<identificador_linha> ::= <letra> <identificador_linha>
+                         | <digito> <identificador_linha>
+                         | "_" <identificador_linha>
+                         | E
+
+<letra> ::= [a-z]
+          | [A-Z]
+
+<digito> ::= [0-9]
+
+<opt_espacos> ::= <espacos>
+                | E
+
+<espacos> ::= <espaco>
+            | <espaco> <espacos>
+
+<espaco> ::= " "
+           | "\n"
+           | "\t"
+           | "\r"
